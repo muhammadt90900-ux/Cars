@@ -1,15 +1,25 @@
 {% extends "base.html" %}
 {% block title %}زیادکردنی ئۆتۆمبێل{% endblock %}
 {% block content %}
-<div class="row justify-content-center"><div class="col-md-6"><div class="card shadow"><div class="card-body">
-<h3 class="text-center mb-3">زیادکردنی ئۆتۆمبێل</h3>
-<form method="POST">
-    <div class="mb-3"><input name="brand" class="form-control" placeholder="مارک" required></div>
-    <div class="mb-3"><input name="model" class="form-control" placeholder="مۆدێل" required></div>
-    <div class="mb-3"><input type="number" name="year" class="form-control" placeholder="ساڵ" required></div>
-    <div class="mb-3"><input type="number" step="0.01" name="price" class="form-control" placeholder="نرخ" required></div>
-    <div class="mb-3"><textarea name="description" class="form-control" rows="3" placeholder="وەسف"></textarea></div>
-    <button type="submit" class="btn btn-primary w-100">تۆمارکردن</button>
-</form>
-</div></div></div></div>
+<div class="ka-form-card">
+    <h2 class="ka-form-title">زیادکردنی ئۆتۆمبێل</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <input name="brand" class="form-control" placeholder="مارک (تۆیۆتا، BMW...)" required>
+        </div>
+        <div class="mb-3">
+            <input name="model" class="form-control" placeholder="مۆدێل" required>
+        </div>
+        <div class="mb-3">
+            <input type="number" name="year" class="form-control" placeholder="ساڵ" required>
+        </div>
+        <div class="mb-3">
+            <input type="number" step="0.01" name="price" class="form-control" placeholder="نرخ ($)" required>
+        </div>
+        <div class="mb-3">
+            <textarea name="description" class="form-control" rows="3" placeholder="وەسف..."></textarea>
+        </div>
+        <button type="submit" class="btn-ka-primary w-100">تۆمارکردن</button>
+    </form>
+</div>
 {% endblock %}
