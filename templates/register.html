@@ -1,64 +1,13 @@
 {% extends "base.html" %}
+{% block title %}خۆتۆمارکردن{% endblock %}
 {% block content %}
-<div class="container py-5">
-    <div class="auth-card mx-auto" style="max-width:480px;">
-        <h2 class="text-center mb-4" style="font-weight:800;">تۆماربوون</h2>
-        <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-            <div class="mb-3">
-                <label class="form-label ka-label">ناوی بەکارهێنەر</label>
-                <input type="text" name="username" class="form-control ka-input" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label ka-label">ئیمەیل</label>
-                <input type="email" name="email" class="form-control ka-input" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label ka-label">وشەی نهێنی</label>
-                <input type="password" name="password" class="form-control ka-input" required>
-            </div>
-            <!-- ===== ئەم بەشە زیاد کرا ===== -->
-            <div class="mb-3">
-                <label class="form-label ka-label">دووبارەکردنەوەی وشەی نهێنی</label>
-                <input type="password" name="confirm_password" class="form-control ka-input" required>
-            </div>
-            <!-- ========================== -->
-            <div class="mb-3">
-                <label class="form-label ka-label">جۆری ئەکاونت</label>
-                <select name="user_type" class="form-select ka-input" required>
-                    <option value="seller">فرۆشیار</option>
-                    <option value="buyer">کڕیار</option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label ka-label"><i class="fas fa-map-marker-alt me-1" style="color:var(--gold);"></i>شار</label>
-                <select name="city" class="form-select ka-input">
-                    <option value="">شار هەڵبژێرە</option>
-                    {% for c in cities %}
-                    <option value="{{ c }}">{{ c }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label ka-label"><i class="fas fa-phone me-1"></i>ژمارەی تەلەفۆن</label>
-                <input type="text" name="phone" class="form-control ka-input" placeholder="07xxxxxxxxx">
-            </div>
-            <div class="mb-3">
-                <label class="form-label ka-label"><i class="fab fa-whatsapp me-1" style="color:#25d366;"></i>واتساپ (ئۆپشنەل)</label>
-                <input type="text" name="whatsapp" class="form-control ka-input" placeholder="07xxxxxxxxx">
-            </div>
-            <div class="mb-3">
-                <label class="form-label ka-label"><i class="fab fa-telegram me-1" style="color:#229ed9;"></i>تێلەگرام (ئۆپشنەل)</label>
-                <input type="text" name="telegram" class="form-control ka-input" placeholder="@username">
-            </div>
-            <button type="submit" class="btn-ka-primary w-100 justify-content-center mt-2" style="padding:13px;">
-                تۆماربوون
-            </button>
-        </form>
-        <p class="text-center mt-3" style="color:var(--text-muted);font-size:0.9rem;">
-            ئەکاونتت هەیە؟ <a href="{{ url_for('login') }}" style="color:var(--gold);">چوونەژوورەوە</a>
-        </p>
-    </div>
-</div>
+<div class="row justify-content-center"><div class="col-md-4"><div class="card shadow"><div class="card-body">
+<h3 class="text-center mb-3">خۆتۆمارکردن</h3>
+<form method="POST">
+    <div class="mb-3"><input name="username" class="form-control" placeholder="ناوی بەکارهێنەر" required></div>
+    <div class="mb-3"><input type="email" name="email" class="form-control" placeholder="ئیمەیڵ" required></div>
+    <div class="mb-3"><input type="password" name="password" class="form-control" placeholder="پاسۆرد" required></div>
+    <button type="submit" class="btn btn-success w-100">خۆتۆمارکردن</button>
+</form>
+</div></div></div></div>
 {% endblock %}
