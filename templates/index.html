@@ -1,107 +1,56 @@
-<!DOCTYPE html>
-<html lang="ku" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بازاڕی سەیارە و پارچە - عێراق</title>
-    <!-- Bootstrap 5 RTL -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .card { transition: transform 0.2s; }
-        .card:hover { transform: scale(1.02); }
-        .search-section { background: #0d6efd; padding: 30px 0; border-radius: 0 0 20px 20px; margin-bottom: 30px; }
-    </style>
-</head>
-<body>
-
-    <!-- ناڤبار -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">🚗 بازاڕی سەیارە</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">سەرەکی</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/add_vehicle">زیادکردنی ئۆتۆمبێل</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/add_part">زیادکردنی پارچە</a></li>
-                </ul>
-            </div>
+{% extends "base.html" %}
+{% block title %}سەرەکی - بازاڕی سەیارە{% endblock %}
+{% block content %}
+<!-- بەشی گەڕان -->
+<div class="bg-primary p-4 rounded-3 mb-4 text-white">
+    <h3 class="text-center mb-3">بگەڕێ بەناو ھەموو شتێکدا</h3>
+    <form method="GET" action="{{ url_for('search') }}" class="row g-2 justify-content-center">
+        <div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="بگەڕێ..."></div>
+        <div class="col-md-2">
+            <select name="category" class="form-select">
+                <option value="all">ھەموو</option>
+                <option value="vehicle">ئۆتۆمبێل</option>
+                <option value="part">پارچە</option>
+            </select>
         </div>
-    </nav>
+        <div class="col-md-2"><input type="number" name="min_price" class="form-control" placeholder="نرخ لە"></div>
+        <div class="col-md-2"><input type="number" name="max_price" class="form-control" placeholder="بۆ نرخ"></div>
+        <div class="col-md-2"><button type="submit" class="btn btn-light w-100">بگەڕێ</button></div>
+    </form>
+</div>
 
-    <!-- بەشی گەڕان -->
-    <div class="search-section">
-        <div class="container">
-            <h3 class="text-white text-center mb-3">بگەڕێ بەناو هەموو شتێکدا</h3>
-            <form method="GET" action="{{ url_for('search') }}" class="row g-2 justify-content-center">
-                <div class="col-md-4">
-                    <input type="text" name="q" class="form-control" placeholder="بگەڕێ بۆ ئۆتۆمبێل یان پارچە..." value="{{ request.args.get('q', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <select name="category" class="form-select">
-                        <option value="all" {% if request.args.get('category') == 'all' %}selected{% endif %}>هەموو</option>
-                        <option value="vehicle" {% if request.args.get('category') == 'vehicle' %}selected{% endif %}>ئۆتۆمبێل</option>
-                        <option value="part" {% if request.args.get('category') == 'part' %}selected{% endif %}>پارچە</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="min_price" class="form-control" placeholder="نرخ لە" value="{{ request.args.get('min_price', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="max_price" class="form-control" placeholder="بۆ نرخ" value="{{ request.args.get('max_price', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-light w-100">بگەڕێ</button>
-                </div>
-            </form>
+<h2>🚘 ئۆتۆمبێلەکان</h2>
+<div class="row mb-4">
+    {% for vehicle in vehicles %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
+                <p class="card-text">
+                    <span class="badge bg-primary">ساڵ: {{ vehicle.year }}</span>
+                    <span class="badge bg-success">${{ vehicle.price }}</span>
+                </p>
+                <p class="card-text">{{ vehicle.description[:80] }}...</p>
+                <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" class="btn btn-outline-primary btn-sm">زیاتر</a>
+            </div>
         </div>
     </div>
+    {% endfor %}
+</div>
 
-    <!-- ناوەڕۆکی سەرەکی -->
-    <div class="container">
-        <!-- بەشی ئۆتۆمبێلەکان -->
-        <h2 class="mb-3">🚘 ئۆتۆمبێلەکان</h2>
-        <div class="row">
-            {% for vehicle in vehicles %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
-                        <p class="card-text">
-                            <span class="badge bg-primary">ساڵ: {{ vehicle.year }}</span>
-                            <span class="badge bg-success">${{ vehicle.price }}</span>
-                            </p>
-                        <p class="card-text">{{ vehicle.description[:80] }}...</p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">بینینی زیاتر</a>
-                    </div>
-                </div>
+<h2>🔧 پارچەکان</h2>
+<div class="row">
+    {% for part in parts %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ part.name }}</h5>
+                <p><span class="badge bg-success">${{ part.price }}</span></p>
+                <p>{{ part.description[:80] }}...</p>
+                <a href="{{ url_for('part_detail', id=part.id) }}" class="btn btn-outline-primary btn-sm">زیاتر</a>
             </div>
-            {% endfor %}
-        </div>
-
-        <!-- بەشی پارچەکان -->
-        <h2 class="mb-3">🔧 پارچەکان</h2>
-        <div class="row">
-            {% for part in parts %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ part.name }}</h5>
-                        <p class="card-text">
-                            <span class="badge bg-success">${{ part.price }}</span>
-                        </p>
-                        <p class="card-text">{{ part.description[:80] }}...</p>
-                        <a href="#" class="btn btn-outline-primary btn-sm">بینینی زیاتر</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    {% endfor %}
+</div>
+{% endblock %}
