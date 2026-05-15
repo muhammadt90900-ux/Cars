@@ -1,56 +1,61 @@
 {% extends "base.html" %}
-{% block title %}سەرەکی - بازاڕی سەیارە{% endblock %}
+{% block title %}سەرەکی - کورد ئۆتۆ{% endblock %}
 {% block content %}
-<!-- بەشی گەڕان -->
-<div class="bg-primary p-4 rounded-3 mb-4 text-white">
-    <h3 class="text-center mb-3">بگەڕێ بەناو ھەموو شتێکدا</h3>
-    <form method="GET" action="{{ url_for('search') }}" class="row g-2 justify-content-center">
-        <div class="col-md-4"><input type="text" name="q" class="form-control" placeholder="بگەڕێ..."></div>
-        <div class="col-md-2">
-            <select name="category" class="form-select">
-                <option value="all">ھەموو</option>
-                <option value="vehicle">ئۆتۆمبێل</option>
-                <option value="part">پارچە</option>
-            </select>
-        </div>
-        <div class="col-md-2"><input type="number" name="min_price" class="form-control" placeholder="نرخ لە"></div>
-        <div class="col-md-2"><input type="number" name="max_price" class="form-control" placeholder="بۆ نرخ"></div>
-        <div class="col-md-2"><button type="submit" class="btn btn-light w-100">بگەڕێ</button></div>
+
+<!-- بەشی سەرەوە -->
+<section class="ka-page-hero">
+    <h1 class="ka-hero-title">بازاڕی سەیارە و پارچە لە عێراق</h1>
+    <form method="GET" action="{{ url_for('search') }}" class="ka-search-wrap" style="display: flex; gap: 10px; justify-content: center; max-width: 700px; margin: 20px auto;">
+        <input type="text" name="q" class="form-control" placeholder="بگەڕێ بۆ ئۆتۆمبێل یان پارچە..." style="flex: 3;">
+        <select name="category" class="form-select" style="flex: 1;">
+            <option value="all">هەموو</option>
+            <option value="vehicle">ئۆتۆمبێل</option>
+            <option value="part">پارچە</option>
+        </select>
+        <button type="submit" class="btn-ka-primary" style="flex: 0.5;">بگەڕێ</button>
     </form>
-</div>
+</section>
 
-<h2>🚘 ئۆتۆمبێلەکان</h2>
-<div class="row mb-4">
-    {% for vehicle in vehicles %}
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
-                <p class="card-text">
-                    <span class="badge bg-primary">ساڵ: {{ vehicle.year }}</span>
-                    <span class="badge bg-success">${{ vehicle.price }}</span>
-                </p>
-                <p class="card-text">{{ vehicle.description[:80] }}...</p>
-                <a href="{{ url_for('vehicle_detail', id=vehicle.id) }}" class="btn btn-outline-primary btn-sm">زیاتر</a>
+<div class="container">
+    <!-- ئۆتۆمبێلەکان -->
+    <h2 style="color: var(--gold); margin: 20px 0;">🚘 ئۆتۆمبێلەکان</h2>
+    <div class="row">
+        {% for vehicle in vehicles %}
+        <div class="col-md-4 mb-4">
+            <div class="ka-card">
+                <div class="ka-card-body">
+                    <h3 class="ka-card-title">{{ vehicle.brand }} {{ vehicle.model }}</h3>
+                    <p class="ka-card-model">ساڵ: {{ vehicle.year }}</p>
+                    <p class="ka-card-price">${{ vehicle.price }}</p>
+                    <p style="color: var(--text-muted);">{{ vehicle.description[:80] }}...</p>
+                    <div class="ka-card-actions" style="display: flex; gap: 8px; margin-top: auto;">
+                        <a href="#" class="btn-ka-primary">بینین</a>
+                        <a href="#" class="btn-ka-outline">پەیوەندی</a>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 
-<h2>🔧 پارچەکان</h2>
-<div class="row">
-    {% for part in parts %}
-    <div class="col-md-4 mb-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">{{ part.name }}</h5>
-                <p><span class="badge bg-success">${{ part.price }}</span></p>
-                <p>{{ part.description[:80] }}...</p>
-                <a href="{{ url_for('part_detail', id=part.id) }}" class="btn btn-outline-primary btn-sm">زیاتر</a>
+    <!-- پارچەکان -->
+    <h2 style="color: var(--gold); margin: 20px 0;">🔧 پارچەکان</h2>
+    <div class="row">
+        {% for part in parts %}
+        <div class="col-md-4 mb-4">
+            <div class="ka-card">
+                <div class="ka-card-body">
+                    <h3 class="ka-card-title">{{ part.name }}</h3>
+                    <p class="ka-card-price">${{ part.price }}</p>
+                    <p style="color: var(--text-muted);">{{ part.description[:80] }}...</p>
+                    <div class="ka-card-actions" style="display: flex; gap: 8px; margin-top: auto;">
+                        <a href="#" class="btn-ka-primary">بینین</a>
+                        <a href="#" class="btn-ka-outline">پەیوەندی</a>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
