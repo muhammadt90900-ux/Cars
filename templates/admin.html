@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="ka-dash-header">
+        <div>
+            <h1 class="ka-dash-title"><i class="fas fa-shield-alt me-2" style="color:var(--gold);"></i>پانێلی ئەدمین</h1>
+            <p style="color:var(--text-muted);margin:0;font-size:0.88rem;">{{ current_user.username }}</p>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="ka-stats-row mb-4">
+        <div class="ka-stat-box">
+            <div class="ka-stat-num">{{ users|length }}</div>
+            <div class="ka-stat-label">کۆی بەکارهێنەران</div>
+        </div>
+        <div class="ka-stat-box">
+            <div class="ka-stat-num" style="color:var(--blue);">{{ total_parts }}</div>
+            <div class="ka-stat-label">کۆی پارچەکان</div>
+        </div>
+        <div class="ka-stat-box">
+            <div class="ka-stat-num" style="color:var(--green);">{{ total_reels }}</div>
+            <div class="ka-stat-label">کۆی ریلزەکان</div>
+        </div>
+    </div>
+
+    <!-- Site Settings -->
+    <div class="ka-section-card mb-4">
+        <h4 class="ka-section-title"><i class="fas fa-cog me-2"></i>ڕێکخستنی مەڵبەند</h4>
+        <form method="POST" action="{{ url_for('admin_settings') }}" class="row g-3 align-items-end">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="col-sm-3">
+                <label class="form-label ka-label">حدی وێنەی خۆڕای (مانگانە)</label>
+                <input type="number" name="default_img" class="form-control ka-input" value="{{ settings.default_free_img_limit }}" min="1" max="100">
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label ka-label">حدی ڤیدیۆی خۆڕای (مانگانە)</label>
+                <input type="number" name="default_vid" class="form-control ka-input" value="{{ settings.default_free_vid_limit }}" min="1" max="100">
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label ka-label">نرخی VIP ($)</label>
+                <input type="number" name="vip_price" class="form-control ka-input" value="{{ settings.vip_price_usd }}" min="1">
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label ka-label">ماوەی VIP (مانگ)</label>
+                <input type="number" name="vip_months" class="form-control ka-input" value="{{ settings.vip_months }}" min="1">
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn-ka-primary w-100 justify-content-center">
+                    <i class="fas fa-save me-1"></i>پاشەکەوت
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="ka-section-card">
+        <h4 class="ka-section-title"><i class="fas fa-users me-2"></i>بەکارهێنەران</h4>
+        <div class="table-responsive">
+            <table class="table ka-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>ناو</th>
+                        <th>ئیمەیل</th>
+                        <th>جۆر</th>
+                        <th>شار</th>
+                        <th>پلان</th>
+                        <th>حدی وێنە</th>
+                        <th>حدی ڤیدیۆ</th>
+                        <th>بارودۆخ</th>
+                        <th>کردارەکان</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for u in users %}
+                <tr class="{{ 'table-danger-row' if not u.is_active_account else '' }}">
+                    <td>{{ u.id }}</td>
+                    <td>
+                        <strong>{{ u.username }}</strong>
+                        {% if u.user_type == 'admin' %}<span class="badge-admin">ئەدمین</span>{% endif %}
+                    </td>
+                    <td style="font-size:0.8rem;color:var(--text-muted);">{{ u.email or '—' }}</td>
+                    <td>{{ u.user_type }}</td>
+                    <td>{{ u.city or '—' }}</td>
+                    <td>
+                        {% if u.plan == 'vip' %}
+                        <span style="color:var(--gold);font-weight:700;"><i class="fas fa-crown me-1"></i>VIP</span>
+                        {% else %}
+                        خۆڕای
+                        {% endif %}
+                    </td>
+                    <!-- Per-user limit form -->
+                    <td colspan="2">
+                        {% if u.user_type != 'admin' %}
+                        <form method="POST" action="{{ url_for('admin_set_limits', user_id=u.id) }}" class="d-flex gap-1 align-items-center">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="number" name="img_limit" value="{{ u.free_img_limit }}" min="1" max="999"
+                                   class="form-control ka-input" style="width:64px;padding:4px 6px;font-size:0.82rem;">
+                            <input type="number" name="vid_limit" value="{{ u.free_vid_limit }}" min="1" max="999"
+                                   class="form-control ka-input" style="width:64px;padding:4px 6px;font-size:0.82rem;">
+                            <button type="submit" class="btn-ka-outline" style="padding:4px 10px;font-size:0.78rem;">✓</button>
+                        </form>
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active_account %}
+                        <span style="color:var(--green);font-size:0.82rem;"><i class="fas fa-check-circle"></i> چالاک</span>
+                        {% else %}
+                        <span style="color:#ef4444;font-size:0.82rem;"><i class="fas fa-ban"></i> بەندکراو</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.user_type != 'admin' %}
+                        <div class="d-flex gap-1">
+                            <form method="POST" action="{{ url_for('admin_grant_vip', user_id=u.id) }}" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm" style="background:var(--gold);color:#000;font-size:0.7rem;border-radius:6px;padding:3px 8px;">
+                                    <i class="fas fa-crown"></i> VIP
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ url_for('admin_toggle_user', user_id=u.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn-ka-outline" style="padding:4px 10px;font-size:0.78rem;"
+                                        title="{{ 'بەندکردن' if u.is_active_account else 'چالاک کردن' }}">
+                                    <i class="fas fa-{{ 'ban' if u.is_active_account else 'check' }}"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=u.id) }}" style="margin:0;"
+                                  onsubmit="return confirm('دڵنیایت لە سڕینەوەی {{ u.username }}؟')">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn-ka-danger" style="padding:4px 10px;font-size:0.78rem;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

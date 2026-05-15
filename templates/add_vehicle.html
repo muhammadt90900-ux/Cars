@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="auth-card mx-auto" style="max-width:560px;">
+        <h2 class="mb-4" style="font-weight:800;">ئۆتۆمبێل زیاد بکە</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="mb-3">
+                <label class="form-label ka-label">ناونیشان</label>
+                <input type="text" name="title" class="form-control ka-input" required placeholder="نموونە: Toyota Corolla 2020">
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label class="form-label ka-label">مارکە</label>
+                    <select name="brand" class="form-select ka-input" required>
+                        <option value="">مارکە هەڵبژێرە</option>
+                        {% for b in brands %}
+                        <option value="{{ b }}">{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label ka-label">مۆدێل</label>
+                    <input type="text" name="model" class="form-control ka-input" placeholder="Corolla">
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label class="form-label ka-label">ساڵ</label>
+                    <input type="number" name="year" class="form-control ka-input" value="2020">
+                </div>
+                <div class="col-6">
+                    <label class="form-label ka-label">نرخ ($)</label>
+                    <input type="number" name="price" class="form-control ka-input" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label ka-label">شار</label>
+                <select name="city" class="form-select ka-input">
+                    <option value="">شار هەڵبژێرە</option>
+                    {% for c in cities %}
+                    <option value="{{ c }}">{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label ka-label">وردەکاری</label>
+                <textarea name="description" class="form-control ka-input" rows="3"></textarea>
+            </div>
+
+            <div class="mb-4 p-3" style="background: rgba(251, 191, 36, 0.05); border: 1px dashed var(--gold); border-radius: 12px;">
+                <label class="form-label ka-label"><i class="fas fa-images me-2"></i>وێنەکان بارکە</label>
+                <input type="file" name="image_files" class="form-control ka-input" accept="image/*" multiple required>
+                <small class="text-muted mt-2 d-block">دەتوانی چەند وێنەیەک پێکەوە هەڵبژێریت (یەکەم وێنە دەبێتە سەرەکی).</small>
+            </div>
+
+            <button type="submit" class="btn-ka-primary w-100 justify-content-center" style="padding:13px;">
+                <i class="fas fa-plus me-2"></i>بڵاوکردنەوەی ئۆتۆمبێل
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="auth-card mx-auto" style="max-width:560px;">
+        <h2 class="mb-4" style="font-weight:800;">دەستکاری پارچە</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label class="form-label ka-label">ناوی پارچە</label>
+                <input type="text" name="name" class="form-control ka-input" value="{{ part.name }}" required>
+            </div>
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label class="form-label ka-label">مارکە</label>
+                    <select name="car_brand" class="form-select ka-input">
+                        <option value="">مارکە هەڵبژێرە</option>
+                        {% for b in brands %}
+                        <option value="{{ b }}" {% if part.car_brand == b %}selected{% endif %}>{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label ka-label">مۆدێل</label>
+                    <input type="text" name="car_model" class="form-control ka-input" value="{{ part.car_model or '' }}">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">شار</label>
+                <select name="city" class="form-select ka-input">
+                    <option value="">شار هەڵبژێرە</option>
+                    {% for c in cities %}
+                    <option value="{{ c }}" {% if part.city == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">وردەکاری</label>
+                <textarea name="description" class="form-control ka-input" rows="3">{{ part.description or '' }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">نرخ</label>
+                <input type="number" name="price" class="form-control ka-input" value="{{ part.price }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">وێنەی نوێ (ئۆپشنەل)</label>
+                <input type="file" name="image_file" class="form-control ka-input" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">یان لینکی وێنە</label>
+                <input type="url" name="image_url" class="form-control ka-input" value="{{ part.image_url if part.image_url and part.image_url.startswith('http') else '' }}">
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn-ka-primary" style="flex:1;justify-content:center;padding:12px;">
+                    <i class="fas fa-save me-2"></i>پاشەکەوتکردن
+                </button>
+                <a href="{{ url_for('dashboard') }}" class="btn-ka-outline" style="padding:12px 18px;">گەڕانەوە</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

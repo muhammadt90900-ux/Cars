@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4" style="max-width:600px;">
+    <div class="ka-form-card">
+        <h2 class="ka-form-title"><i class="fas fa-user-edit me-2"></i>{{ t('edit_profile') }}</h2>
+
+        <!-- وێنەی پرۆفایل ئێستا -->
+        {% if current_user.profile_image %}
+        <div class="text-center mb-4">
+            <img src="{{ current_user.profile_image }}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);" alt="">
+        </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="mb-3">
+                <label class="form-label">{{ t('profile_image') }}</label>
+                <input type="file" name="profile_image" class="form-control ka-input" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-phone me-1"></i>تەلەفۆن</label>
+                <input type="text" name="phone" class="form-control ka-input" value="{{ current_user.phone }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fab fa-whatsapp me-1"></i>واتساپ</label>
+                <input type="text" name="whatsapp" class="form-control ka-input" value="{{ current_user.whatsapp }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fab fa-telegram me-1"></i>تێلەگرام</label>
+                <input type="text" name="telegram" class="form-control ka-input" value="{{ current_user.telegram }}">
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-map-marker-alt me-1"></i>شار</label>
+                <select name="city" class="form-select ka-input">
+                    <option value="">--- شار هەڵبژێرە ---</option>
+                    {% for c in cities %}
+                    <option value="{{ c }}" {% if current_user.city == c %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn-ka-primary w-100" style="justify-content:center;">
+                <i class="fas fa-save me-2"></i>پاشەکەوت بکە
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

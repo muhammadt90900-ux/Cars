@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="auth-card mx-auto" style="max-width:560px;">
+        <h2 class="mb-4" style="font-weight:800;">پارچەی تازە زیاد بکە</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label class="form-label ka-label">ناوی پارچە</label>
+                <input type="text" name="name" class="form-control ka-input" required>
+            </div>
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <label class="form-label ka-label">مارکەی ئۆتۆمبێل</label>
+                    <select name="car_brand" class="form-select ka-input">
+                        <option value="">مارکە هەڵبژێرە</option>
+                        {% for b in brands %}
+                        <option value="{{ b }}">{{ b }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label ka-label">مۆدێل / ساڵ</label>
+                    <input type="text" name="car_model" class="form-control ka-input" placeholder="Corolla 2020">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label"><i class="fas fa-map-marker-alt me-1" style="color:var(--gold);"></i>شار</label>
+                <select name="city" class="form-select ka-input">
+                    <option value="">شار هەڵبژێرە</option>
+                    {% for c in cities %}
+                    <option value="{{ c }}">{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">وردەکاری</label>
+                <textarea name="description" class="form-control ka-input" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">نرخ (دینار)</label>
+                <input type="number" name="price" class="form-control ka-input" required min="0">
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">وێنە بارکە</label>
+                <input type="file" name="image_file" class="form-control ka-input" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">یان ڤیدیۆ بارکە</label>
+                <input type="file" name="video_file" class="form-control ka-input" accept="video/*">
+            </div>
+            <div class="mb-3">
+                <label class="form-label ka-label">یان لینکی وێنە</label>
+                <input type="url" name="image_url" class="form-control ka-input" placeholder="https://...">
+            </div>
+            <button type="submit" class="btn-ka-primary w-100 justify-content-center" style="padding:13px;">
+                <i class="fas fa-plus me-2"></i>زیادکردن
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

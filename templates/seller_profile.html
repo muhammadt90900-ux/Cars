@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="seller-profile-card mb-4">
+        <!-- وێنەی پرۆفایل -->
+        <div class="seller-avatar-wrap">
+            {% if seller.profile_image %}
+            <img src="{{ seller.profile_image }}" class="seller-avatar-img" alt="{{ seller.username }}">
+            {% else %}
+            <div class="seller-avatar"><i class="fas fa-user-circle"></i></div>
+            {% endif %}
+            {% if seller.plan == 'vip' %}
+            <span class="seller-vip-crown" title="VIP">👑</span>
+            {% endif %}
+        </div>
+        <div>
+            <h2 style="font-weight:800;margin-bottom:4px;">
+                {{ seller.username }}
+                {% if seller.plan == 'vip' %}
+                <span class="vip-badge ms-2"><i class="fas fa-crown"></i> VIP</span>
+                {% endif %}
+            </h2>
+            {% if seller.city %}
+            <p style="color:var(--text-muted);margin-bottom:6px;font-size:0.9rem;">
+                <i class="fas fa-map-marker-alt me-1" style="color:var(--gold);"></i>{{ seller.city }}
+            </p>
+            {% endif %}
+            <p style="color:var(--text-muted);font-size:0.85rem;">
+                <i class="fas fa-box me-1"></i>{{ parts|length }} پارچە
+            </p>
+            <div class="d-flex gap-2 flex-wrap mt-2">
+                {% set wp = seller.whatsapp or seller.phone %}
+                {% if wp %}
+                <a href="https://wa.me/964{{ wp.lstrip('0') }}" target="_blank"
+                   class="btn-ka-primary" style="background:linear-gradient(135deg,#25d366,#128c7e);font-size:0.85rem;padding:8px 16px;">
+                    <i class="fab fa-whatsapp me-1"></i>واتساپ
+                </a>
+                {% endif %}
+                {% if seller.telegram %}
+                <a href="https://t.me/{{ seller.telegram }}" target="_blank"
+                   class="btn-ka-primary" style="background:linear-gradient(135deg,#229ed9,#0d7ab5);font-size:0.85rem;padding:8px 16px;">
+                    <i class="fab fa-telegram me-1"></i>تێلەگرام
+                </a>
+                {% endif %}
+                {% if seller.phone %}
+                <a href="tel:{{ seller.phone }}" class="btn-ka-outline" style="font-size:0.85rem;padding:8px 14px;">
+                    <i class="fas fa-phone me-1"></i>{{ seller.phone }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h4 style="font-weight:700;margin-bottom:20px;">پارچەکانی {{ seller.username }} ({{ parts|length }})</h4>
+    <div class="row g-4">
+        {% for part in parts %}
+        <div class="col-lg-4 col-md-6">
+            <div class="ka-card">
+                <div style="position:relative;">
+                    {% if part.media_type == 'video' %}
+                    <video class="ka-card-video" src="{{ part.image_url }}" muted loop playsinline
+                           onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+                    <span class="media-badge"><i class="fas fa-play-circle me-1"></i>ڤیدۆ</span>
+                    {% elif part.image_url %}
+                    <img class="ka-card-img" src="{{ part.image_url }}" alt="{{ part.name }}" loading="lazy">
+                    {% else %}
+                    <div class="ka-card-img d-flex align-items-center justify-content-center" style="background:var(--dark-card2);">
+                        {% if part.car_brand and CAR_BRAND_LOGOS.get(part.car_brand) %}
+                        <img src="{{ CAR_BRAND_LOGOS[part.car_brand] }}" style="width:80px;opacity:0.4;" alt="">
+                        {% else %}
+                        <i class="fas fa-car" style="font-size:3rem;color:var(--text-muted);"></i>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if part.city %}
+                    <span class="city-badge"><i class="fas fa-map-marker-alt me-1"></i>{{ part.city }}</span>
+                    {% endif %}
+                </div>
+                <div class="ka-card-body">
+                    {% if part.car_brand %}
+                    <div class="brand-tag-with-logo">
+                        {% if CAR_BRAND_LOGOS.get(part.car_brand) %}
+                        <img src="{{ CAR_BRAND_LOGOS[part.car_brand] }}" class="brand-tag-logo" alt="" onerror="this.style.display='none'">
+                        {% endif %}
+                        <span class="brand-tag">{{ part.car_brand }}</span>
+                    </div>
+                    {% endif %}
+                    <h5 class="ka-card-title">{{ part.name }}</h5>
+                    <p class="ka-card-model"><i class="fas fa-car me-1"></i>{{ part.car_model or 'گشتی' }}</p>
+                    <p class="ka-card-price">{{ "{:,.0f}".format(part.price) }} {{ t('dinar') }}</p>
+                    <div class="ka-card-meta"><span><i class="fas fa-eye me-1"></i>{{ part.views or 0 }}</span></div>
+                    <a href="{{ url_for('part_detail', part_id=part.id) }}" class="btn-ka-primary" style="width:100%;justify-content:center;">
+                        <i class="fas fa-eye me-1"></i>{{ t('detail') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5" style="color:var(--text-muted);">هیچ پارچەیەک نییە.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

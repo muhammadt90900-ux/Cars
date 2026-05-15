@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="direction: rtl; padding: 20px;">
+    <h2>دەستکاریکردنی ئۆتۆمبێل</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <!-- لێرەدا دەبێت فۆرمی دەستکاریکردنی ئۆتۆمبێلەکەت بنووسیت بەپێی فیلدهکانی مۆدێلەکەت -->
+        <p>تکایە فۆرمی دەستکاریکردنەکەت لێرەدا دابنێ وەک فۆرمی زیادکردن.</p>
+        <button type="submit" class="btn btn-primary">ناردن</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="ka-page-hero">
+        <h1 class="ka-hero-title">{{ t('plans') }}</h1>
+    </div>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-5">
+            <div class="plan-card">
+                <div class="plan-icon">🆓</div>
+                <h3>{{ t('free_plan') }}</h3>
+                <div class="plan-price">$0</div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> {{ settings.default_free_img_limit }} وێنە لە مانگێکدا</li>
+                    <li><i class="fas fa-check"></i> {{ settings.default_free_vid_limit }} ڤیدۆ لە مانگێکدا</li>
+                    <li><i class="fas fa-check"></i> پرۆفایلی فرۆشیار</li>
+                    <li><i class="fas fa-times" style="color:#ef4444;"></i> واتساپ و تێلەگرام دەرکەوتوو</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="plan-card plan-vip">
+                <div class="plan-badge">⭐ باشترین هەڵبژاردن</div>
+                <div class="plan-icon">👑</div>
+                <h3>VIP</h3>
+                <div class="plan-price">${{ settings.vip_price_usd }}<span style="font-size:1rem;color:var(--text-muted);"> / {{ settings.vip_months }} مانگ</span></div>
+                <ul class="plan-features">
+                    <li><i class="fas fa-infinity" style="color:var(--gold);"></i> کالا و ڤیدۆی نامحدود</li>
+                    <li><i class="fas fa-check"></i> واتساپ و تێلەگرام دیار</li>
+                    <li><i class="fas fa-check"></i> پرۆفایلی تایبەت</li>
+                    <li><i class="fas fa-check"></i> پشتگیری زیاتر</li>
+                </ul>
+                {% if current_user.is_authenticated %}
+                <form method="POST" action="{{ url_for('upgrade_vip') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn-ka-primary w-100 justify-content-center mt-3" style="padding:13px;font-size:1rem;">
+                        <i class="fas fa-crown me-2"></i>{{ t('upgrade_vip') }}
+                    </button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('register') }}" class="btn-ka-primary w-100 justify-content-center mt-3" style="padding:13px;">
+                    <i class="fas fa-crown me-2"></i>ئێستا تۆماربە
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

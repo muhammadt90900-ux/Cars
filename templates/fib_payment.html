@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="ka-form-card text-center" style="max-width:500px;">
+        <div style="font-size:3rem;">🏦</div>
+        <h2 class="mt-3">FIB - بانکی یەکەم</h2>
+        <p style="color:var(--text-muted);">بڕی پارە: <strong style="color:var(--gold);">${{ amount }}</strong></p>
+
+        <!-- QR Code -->
+        {% if qr_code %}
+        <div class="my-4">
+            <img src="{{ qr_code }}" alt="QR Code" style="max-width:250px;border-radius:12px;">
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">ئەم QR Code ـە بە ئەپی FIB سکان بکە</p>
+        </div>
+        {% endif %}
+
+        <!-- Readable Code -->
+        {% if readable_code %}
+        <div class="my-4 p-3" style="background:var(--dark-card2);border-radius:12px;">
+            <p style="color:var(--text-muted);font-size:0.85rem;margin:0;">کۆدی پارەدان:</p>
+            <p style="font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:4px;margin:0;">{{ readable_code }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Personal App Link -->
+        {% if personal_app_link %}
+        <a href="{{ personal_app_link }}" target="_blank" class="btn-ka-primary w-100 justify-content-center mt-3" style="padding:13px;">
+            <i class="fas fa-external-link-alt me-2"></i>کردنەوە لە ئەپی FIB
+        </a>
+        {% endif %}
+
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-top:20px;">
+            دوای تەواوکردنی پارەدان، ئەم پەڕەیە خۆکارانە نوێ دەبێتەوە.
+        </p>
+
+        <div id="status-message" style="margin-top:12px;"></div>
+    </div>
+</div>
+
+<!-- پشکنینی خۆکارانە بۆ دۆخی پارەدان -->
+<script>
+    const fibPaymentId = "{{ fib_payment_id }}";
+    let checkCount = 0;
+    const maxChecks = 60; // 2 خولەک
+
+    function checkPaymentStatus() {
+        if (checkCount >= maxChecks) {
+            document.getElementById('status-message').innerHTML =
+                '<div class="alert alert-warning">کاتی چاوەڕوانی تەواو بوو. ئەگەر پارەکەت ناردووە، VIPـەکەت چالاک دەکرێت.</div>';
+            return;
+        }
+        checkCount++;
+        fetch("{{ url_for('fib_check_payment', fib_payment_id='') }}" + fibPaymentId)
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'paid') {
+                    window.location.href = data.redirect;
+                } else if (data.status === 'error') {
+                    document.getElementById('status-message').innerHTML =
+                        '<div class="alert alert-danger">کێشەی پەیوەندی. تکایە دواتر هەوڵبدەرەوە.</div>';
+                } else {
+                    document.getElementById('status-message').innerHTML =
+                        '<p style="color:var(--text-muted);">چاوەڕوانی پارەدان... (' + checkCount + '/' + maxChecks + ')</p>';
+                    setTimeout(checkPaymentStatus, 2000);
+                }
+            });
+    }
+    setTimeout(checkPaymentStatus, 3000);
+</script>
+{% endblock %}

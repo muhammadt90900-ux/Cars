@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="ka-form-card" style="max-width:420px;">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem;margin-bottom:8px;">📧</div>
+            <h2 class="ka-form-title">{{ t('verify_email') }}</h2>
+            <p style="color:var(--text-muted);font-size:0.88rem;">
+                کۆدی 6 ژمارەیی بۆ<br>
+                <strong style="color:var(--gold);">{{ email }}</strong><br>
+                نێردراوە. تکایە بپشکنە.
+            </p>
+        </div>
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-4">
+                <label class="form-label text-center d-block">کۆدی پشتڕاستکردنەوە</label>
+                <input type="text" name="otp" class="form-control otp-input"
+                       maxlength="6" pattern="\d{6}" required
+                       placeholder="000000" dir="ltr" autocomplete="one-time-code">
+            </div>
+            <button type="submit" class="btn-ka-primary w-100 justify-content-center py-3" style="font-size:1rem;">
+                <i class="fas fa-check-circle me-2"></i>پشتڕاستکردنەوە
+            </button>
+        </form>
+        <div class="text-center mt-3">
+            <p style="color:var(--text-muted);font-size:0.82rem;">
+                <i class="fas fa-clock me-1" style="color:var(--gold);"></i>
+                کۆدەکە تەنها 10 خولەک کار دەکات
+            </p>
+            <p style="font-size:0.82rem;">
+                کۆدت نەهاتەوە؟
+                <a href="{{ url_for('login') }}" style="color:var(--gold);">دووبارە هەوڵبدەرەوە</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+// Auto-submit when 6 digits entered
+document.querySelector('[name=otp]').addEventListener('input', function() {
+    if (this.value.length === 6) this.closest('form').submit();
+});
+</script>
+{% endblock %}

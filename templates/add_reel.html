@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+    <div class="ka-form-card" style="max-width:550px;">
+        <div class="mb-4">
+            <h2 class="ka-form-title"><i class="fas fa-film me-2"></i>ریل زیاد بکە</h2>
+            <p style="color:var(--text-muted);font-size:0.88rem;">ڤیدۆی کورت بۆ پارچەکانت</p>
+        </div>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label class="form-label">ناوی ریل</label>
+                <input type="text" name="title" class="form-control" required placeholder="مسل: تایەری Toyota باشترین نرخ">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">وەسف (ئارەزوومەندانە)</label>
+                <textarea name="description" class="form-control" rows="2" placeholder="..."></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label"><i class="fas fa-video me-1"></i>ڤیدۆ بارکە *</label>
+                <input type="file" name="video_file" class="form-control" accept=".mp4,.mov,.webm,.avi" required>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">
+                    ڤیدۆی کورت (9:16) باشترە | زیاترین قەبارە: 50MB
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="form-label"><i class="fas fa-image me-1"></i>وێنەی کاڤەری (ئارەزوومەندانە)</label>
+                <input type="file" name="thumb_file" class="form-control" accept=".png,.jpg,.jpeg,.webp">
+            </div>
+            <div class="d-flex gap-3">
+                <button type="submit" class="btn-ka-primary" style="flex:1;justify-content:center;padding:12px;">
+                    <i class="fas fa-upload me-2"></i>بارکردن
+                </button>
+                <a href="{{ url_for('reels') }}" class="btn-ka-outline" style="padding:12px 20px;">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
