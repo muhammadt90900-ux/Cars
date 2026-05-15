@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ku">
+<head>
+    <meta charset="UTF-8">
+    <title>ئەنجامی گەڕان</title>
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; text-align: right; margin: 20px; }
+        .result-section { margin-bottom: 30px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px; border-radius: 5px; display: inline-block; width: 250px; vertical-align: top; }
+        .card h3 { margin-top: 0; }
+        .no-result { color: #888; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>ئەنجامی گەڕان بۆ "{{ query }}"</h1>
+    <p>کاتێگۆری: {{ category }}</p>
+    <a href="{{ url_for('index') }}">گەڕانەوە بۆ لاپەڕەی سەرەکی</a>
+
+    <div class="result-section">
+        <h2>ئۆتۆمبێلەکان</h2>
+        {% if vehicles %}
+            {% for vehicle in vehicles %}
+            <div class="card">
+                <h3>{{ vehicle.brand }} {{ vehicle.model }}</h3>
+                <p>ساڵ: {{ vehicle.year }}</p>
+                <p>نرخ: {{ vehicle.price }} $</p>
+                <p>{{ vehicle.description[:100] }}...</p>
+                <a href="#">بینینی زیاتر</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-result">هیچ ئۆتۆمبێلێک نەدۆزرایەوە.</p>
+        {% endif %}
+    </div>
+
+    <div class="result-section">
+        <h2>پارچەکان</h2>
+        {% if parts %}
+            {% for part in parts %}
+            <div class="card">
+                <h3>{{ part.name }}</h3>
+                <p>نرخ: {{ part.price }} $</p>
+                <p>{{ part.description[:100] }}...</p>
+                <a href="#">بینینی زیاتر</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-result">هیچ پارچەیەک نەدۆزرایەوە.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
