@@ -3,49 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}بازاڕی سەیارە و پارچە{% endblock %}</title>
+    <title>{% block title %}کورد ئۆتۆ - بازاڕی سەیارە و پارچە{% endblock %}</title>
+    <!-- فۆنتی عەرەبی -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <!-- CSS ی تایبەتی -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; min-height: 100vh; display: flex; flex-direction: column; }
-        .content { flex: 1; }
-        footer { background: #212529; color: white; padding: 15px 0; margin-top: auto; }
-    </style>
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">🚗 بازاڕی سەیارە</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">سەرەکی</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/add_vehicle">زیادکردنی ئۆتۆمبێل</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/add_part">زیادکردنی پارچە</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/dashboard">داشبۆرد</a></li>
-                    {% if current_user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="/logout">چوونەدەرەوە</a></li>
-                    {% else %}
-                    <li class="nav-item"><a class="nav-link" href="/login">چوونەژوورەوە</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/register">خۆتۆمارکردن</a></li>
-                    {% endif %}
-                </ul>
+
+    <!-- ناوبار -->
+    <nav class="ka-navbar">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/" class="ka-brand">
+                <span class="brand-icon">🚗</span>
+                <span class="brand-text">کورد ئۆتۆ</span>
+            </a>
+            <div>
+                <a href="/" class="nav-link">سەرەکی</a>
+                <a href="/add_vehicle" class="nav-link ka-add-btn">+ زیادکردن</a>
+                {% if current_user.is_authenticated %}
+                <a href="/dashboard" class="nav-link">داشبۆرد</a>
+                <a href="/logout" class="nav-link">چوونەدەرەوە</a>
+                {% else %}
+                <a href="/login" class="nav-link">چوونەژوورەوە</a>
+                <a href="/register" class="nav-link ka-register-btn">خۆتۆمارکردن</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 
-    <div class="content container mt-4">
+    <!-- ناوەڕۆک -->
+    <main>
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
-    <footer>
-        <div class="container text-center">
-            © ٢٠٢٥ بازاڕی سەیارە و پارچە - عێراق
+    <!-- فوتەر -->
+    <footer class="ka-footer">
+        <div class="container">
+            <p>© 2025 کورد ئۆتۆ - هەموو مافێک پارێزراوە</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>
