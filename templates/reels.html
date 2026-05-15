@@ -1,105 +1,12 @@
 {% extends "base.html" %}
+{% block title %}ڕیلەکان{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="ka-page-hero" style="padding:40px 0 28px;">
-        <h1 class="ka-hero-title"><i class="fas fa-film me-2"></i>{{ t('reels') }}</h1>
-        <p class="ka-hero-sub">ڤیدۆی کورتی پارچەی ئۆتۆمبێل</p>
+<h2>ڕیلەکان</h2>
+<div class="row">
+    {% for reel in reels %}
+    <div class="col-md-4 mb-4">
+        <div class="card"><div class="card-body"><video controls class="w-100"><source src="{{ reel.url }}" type="video/mp4"></video><p>{{ reel.caption }}</p></div></div>
     </div>
-
-    {% if current_user.is_authenticated %}
-    <div class="text-center mb-4">
-        <a href="{{ url_for('add_reel') }}" class="btn-ka-primary" style="font-size:0.95rem;padding:10px 28px;">
-            <i class="fas fa-plus me-2"></i>ریل زیاد بکە
-        </a>
-    </div>
-    {% endif %}
-
-    {% if reels %}
-    <div class="reels-grid">
-        {% for reel in reels %}
-        <div class="reel-card">
-            <div class="reel-video-wrap">
-                <video src="{{ reel.video_url }}"
-                       {% if reel.thumbnail_url %}poster="{{ reel.thumbnail_url }}"{% endif %}
-                       loop muted playsinline
-                       onmouseenter="this.play()" onmouseleave="this.pause();this.currentTime=0;"
-                       onclick="this.paused ? this.play() : this.pause();"
-                       style="cursor:pointer;">
-                </video>
-                <!-- دوگمەی دەنگ -->
-                <button class="reel-sound-btn" onclick="toggleSound(this)" title="دەنگ">
-                    <i class="fas fa-volume-mute"></i>
-                </button>
-                <!-- ئۆڤەرلەی -->
-                <div class="reel-overlay">
-                    <p class="reel-title">{{ reel.title }}</p>
-                    <div class="reel-stats">
-                        <span class="reel-stat"><i class="fas fa-eye"></i> <span id="views-{{ reel.id }}">{{ reel.views }}</span> {{ t('views') }}</span>
-                        <button class="reel-stat reel-like-btn" onclick="likeReel({{ reel.id }}, this)" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;">
-                            <i class="fas fa-heart"></i> <span id="likes-{{ reel.id }}">{{ reel.likes }}</span> {{ t('likes') }}
-                        </button>
-                        <span class="reel-stat"><i class="fas fa-user"></i> {{ reel.owner.username }}</span>
-                    </div>
-                </div>
-            </div>
-            {% if reel.description %}
-            <div style="padding:12px 14px;font-size:0.82rem;color:var(--text-muted);">
-                {{ reel.description[:80] }}{% if reel.description|length > 80 %}…{% endif %}
-            </div>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="text-center py-5" style="color:var(--text-muted);">
-        <i class="fas fa-film" style="font-size:4rem;opacity:0.2;display:block;margin-bottom:16px;"></i>
-        <p style="font-size:1rem;">هێشتا هیچ ریلێک نییە.</p>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('add_reel') }}" class="btn-ka-primary mt-2">
-            <i class="fas fa-plus me-2"></i>یەکەمت بکە
-        </a>
-        {% endif %}
-    </div>
-    {% endif %}
+    {% endfor %}
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-// ژمارەکردنی بینین کاتێک ڤیدۆ دەستپێدەکات
-document.querySelectorAll('.reel-video-wrap video').forEach(function(vid) {
-    var counted = false;
-    var reelId = vid.closest('.reel-card') ? vid.closest('.reel-card').querySelector('[id^="views-"]') : null;
-    if (!reelId) return;
-    var id = reelId.id.replace('views-', '');
-    vid.addEventListener('play', function() {
-        if (!counted) {
-            counted = true;
-            fetch('/reel/' + id + '/view', {method:'POST', headers:{'X-CSRFToken': '{{ csrf_token() }}'}})
-                .then(r => r.json()).then(d => {
-                    if (d.views !== undefined) document.getElementById('views-' + id).textContent = d.views;
-                });
-        }
-    });
-});
-
-// دەنگ کردنەوە / دەنگکردنەوە
-function toggleSound(btn) {
-    var video = btn.closest('.reel-video-wrap').querySelector('video');
-    video.muted = !video.muted;
-    btn.innerHTML = video.muted
-        ? '<i class="fas fa-volume-mute"></i>'
-        : '<i class="fas fa-volume-up"></i>';
-}
-
-// لایک کردن
-function likeReel(id, btn) {
-    btn.disabled = true;
-    btn.style.color = 'var(--gold)';
-    fetch('/reel/' + id + '/like', {method:'POST', headers:{'X-CSRFToken': '{{ csrf_token() }}'}})
-        .then(r => r.json()).then(d => {
-            if (d.likes !== undefined) document.getElementById('likes-' + id).textContent = d.likes;
-        });
-}
-</script>
 {% endblock %}
