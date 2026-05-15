@@ -70,6 +70,31 @@
             </div>
             {% endfor %}
         {% else %}
+        <!-- فۆڕمی گەڕان -->
+<div class="search-container" style="text-align:center; margin: 20px 0;">
+    <form method="GET" action="{{ url_for('search') }}" style="display: inline-flex; gap: 10px; align-items: center;">
+        <input type="text" name="q" placeholder="بگەڕێ بۆ ئۆتۆمبێل یان پارچە..." 
+               value="{{ request.args.get('q', '') }}"
+               style="padding: 10px 15px; border: 2px solid #ccc; border-radius: 5px; width: 300px; font-size: 16px;">
+        
+        <select name="category" style="padding: 10px; border: 2px solid #ccc; border-radius: 5px; font-size: 16px;">
+            <option value="all" {% if request.args.get('category') == 'all' %}selected{% endif %}>هەموو</option>
+            <option value="vehicle" {% if request.args.get('category') == 'vehicle' %}selected{% endif %}>ئۆتۆمبێل</option>
+            <option value="part" {% if request.args.get('category') == 'part' %}selected{% endif %}>پارچە</option>
+        </select>
+        
+        <input type="number" name="min_price" placeholder="نرخ لە" step="1"
+               value="{{ request.args.get('min_price', '') }}"
+               style="padding: 10px; border: 2px solid #ccc; border-radius: 5px; width: 100px;">
+        <input type="number" name="max_price" placeholder="بۆ نرخ" step="1"
+               value="{{ request.args.get('max_price', '') }}"
+               style="padding: 10px; border: 2px solid #ccc; border-radius: 5px; width: 100px;">
+        
+        <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+            بگەڕێ
+        </button>
+    </form>
+</div>
             {% for vehicle in vehicles %}
             <div class="col-md-6 col-lg-4">
                 <div class="ka-card position-relative">
