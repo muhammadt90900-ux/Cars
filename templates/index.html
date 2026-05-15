@@ -1,152 +1,107 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بازاڕی سەیارە و پارچە - عێراق</title>
+    <!-- Bootstrap 5 RTL -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { transition: transform 0.2s; }
+        .card:hover { transform: scale(1.02); }
+        .search-section { background: #0d6efd; padding: 30px 0; border-radius: 0 0 20px 20px; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
 
-{% block content %}
-<div class="container">
-    <!-- Hero section -->
-    <div class="ka-page-hero">
-        <h1 class="ka-hero-title">{{ t('site_name') }} - {{ t('home') }}</h1>
-        <p class="ka-hero-sub">{{ t('search_placeholder') }}</p>
-    </div>
-
-    <!-- Search & Filters -->
-    <div class="ka-search-wrap">
-        <form method="GET" action="{{ url_for('index') }}" class="w-100 d-flex flex-wrap gap-2">
-            <input type="hidden" name="type" value="{{ list_type }}">
-            <input type="text" name="q" class="form-control ka-search-input" placeholder="{{ t('search_placeholder') }}" value="{{ search_query or '' }}" style="flex:3;">
-            <select name="city" class="form-select ka-filter-select" style="flex:1;">
-                <option value="">{{ t('all_cities') }}</option>
-                {% for city in IRAQ_CITIES %}
-                <option value="{{ city }}" {% if city_filter == city %}selected{% endif %}>{{ city }}</option>
-                {% endfor %}
-            </select>
-            <select name="brand" class="form-select ka-filter-select" style="flex:1;">
-                <option value="">{{ t('all_brands') }}</option>
-                {% for brand in CAR_BRANDS %}
-                <option value="{{ brand }}" {% if brand_filter == brand %}selected{% endif %}>{{ brand }}</option>
-                {% endfor %}
-            </select>
-            <input type="number" name="min_price" class="form-control" placeholder="{{ t('min_price') }}" value="{{ min_price or '' }}" style="flex:1;">
-            <input type="number" name="max_price" class="form-control" placeholder="{{ t('max_price') }}" value="{{ max_price or '' }}" style="flex:1;">
-            <button type="submit" class="btn-ka-primary">{{ t('search') }} <i class="fas fa-search"></i></button>
-            <a href="{{ url_for('index') }}" class="btn-ka-outline">{{ t('cancel') }}</a>
-        </form>
-        <div class="mt-3 d-flex gap-2">
-            <a href="{{ url_for('index', type='part') }}" class="btn {{ 'btn-ka-primary' if list_type=='part' else 'btn-ka-outline' }}">{{ t('parts') }}</a>
-            <a href="{{ url_for('index', type='vehicle') }}" class="btn {{ 'btn-ka-primary' if list_type=='vehicle' else 'btn-ka-outline' }}">{{ t('vehicles') }}</a>
+    <!-- ناڤبار -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">🚗 بازاڕی سەیارە</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">سەرەکی</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_vehicle">زیادکردنی ئۆتۆمبێل</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_part">زیادکردنی پارچە</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- Items Grid -->
-    <div class="row g-4">
-        {% if list_type == 'part' %}
-            {% for part in parts %}
-            <div class="col-md-6 col-lg-4">
-                <div class="ka-card position-relative">
-                    {% if part.media_type == 'video' %}
-                        <video class="ka-card-video" src="{{ part.image_url }}" style="height:200px; object-fit:cover;"></video>
-                    {% else %}
-                        <img class="ka-card-img" src="{{ part.image_url }}" alt="{{ part.name }}">
-                    {% endif %}
-                    <div class="city-badge">{{ part.city or t('city') }}</div>
-                    <div class="ka-card-body">
-                        <h3 class="ka-card-title">{{ part.name }}</h3>
-                        <div class="brand-tag-with-logo">
-                            {% if part.car_brand in CAR_BRAND_LOGOS %}
-                            <img src="{{ CAR_BRAND_LOGOS[part.car_brand] }}" class="brand-tag-logo" alt="">
-                            {% endif %}
-                            <span class="brand-tag">{{ part.car_brand }}</span>
-                        </div>
-                        <div class="ka-card-model">{{ part.car_model }}</div>
-                        <div class="ka-card-price">{{ part.price }} IQD</div>
-                        <div class="ka-card-actions">
-                            <a href="{{ url_for('part_detail', part_id=part.id) }}" class="btn-ka-primary"><i class="fas fa-eye"></i> {{ t('detail') }}</a>
-                        </div>
-                    </div>
+    <!-- بەشی گەڕان -->
+    <div class="search-section">
+        <div class="container">
+            <h3 class="text-white text-center mb-3">بگەڕێ بەناو هەموو شتێکدا</h3>
+            <form method="GET" action="{{ url_for('search') }}" class="row g-2 justify-content-center">
+                <div class="col-md-4">
+                    <input type="text" name="q" class="form-control" placeholder="بگەڕێ بۆ ئۆتۆمبێل یان پارچە..." value="{{ request.args.get('q', '') }}">
                 </div>
-            </div>
-            {% else %}
-            <div class="col-12 text-center py-5">
-                <p class="text-muted">{{ t('no_parts') }}</p>
-            </div>
-            {% endfor %}
-        {% else %}
-                    <!-- فۆڕمی گەڕان -->
-            <div class="search-container" style="text-align:center; margin: 20px 0;">
-                <form method="GET" action="{{ url_for('search') }}" style="display: inline-flex; gap: 10px; align-items: center;">
-                    <input type="text" name="q" placeholder="بگەڕێ بۆ ئۆتۆمبێل یان پارچە..." 
-                           value="{{ request.args.get('q', '') }}"
-                           style="padding: 10px 15px; border: 2px solid #ccc; border-radius: 5px; width: 300px; font-size: 16px;">
-                    
-                    <select name="category" style="padding: 10px; border: 2px solid #ccc; border-radius: 5px; font-size: 16px;">
+                <div class="col-md-2">
+                    <select name="category" class="form-select">
                         <option value="all" {% if request.args.get('category') == 'all' %}selected{% endif %}>هەموو</option>
                         <option value="vehicle" {% if request.args.get('category') == 'vehicle' %}selected{% endif %}>ئۆتۆمبێل</option>
                         <option value="part" {% if request.args.get('category') == 'part' %}selected{% endif %}>پارچە</option>
                     </select>
-                    
-                    <input type="number" name="min_price" placeholder="نرخ لە" step="1"
-                           value="{{ request.args.get('min_price', '') }}"
-                           style="padding: 10px; border: 2px solid #ccc; border-radius: 5px; width: 100px;">
-                    <input type="number" name="max_price" placeholder="بۆ نرخ" step="1"
-                           value="{{ request.args.get('max_price', '') }}"
-                           style="padding: 10px; border: 2px solid #ccc; border-radius: 5px; width: 100px;">
-                    
-                    <button type="submit" style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
-                        بگەڕێ
-                    </button>
-                </form>
-            </div>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="min_price" class="form-control" placeholder="نرخ لە" value="{{ request.args.get('min_price', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="max_price" class="form-control" placeholder="بۆ نرخ" value="{{ request.args.get('max_price', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-light w-100">بگەڕێ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ناوەڕۆکی سەرەکی -->
+    <div class="container">
+        <!-- بەشی ئۆتۆمبێلەکان -->
+        <h2 class="mb-3">🚘 ئۆتۆمبێلەکان</h2>
+        <div class="row">
             {% for vehicle in vehicles %}
-            <div class="col-md-6 col-lg-4">
-                <div class="ka-card position-relative">
-                    {% if vehicle.media_type == 'video' %}
-                        <video class="ka-card-video" src="{{ vehicle.image_url }}" style="height:200px; object-fit:cover;"></video>
-                    {% else %}
-                        <img class="ka-card-img" src="{{ vehicle.image_url }}" alt="{{ vehicle.title }}">
-                    {% endif %}
-                    <div class="city-badge">{{ vehicle.city or t('city') }}</div>
-                    <div class="ka-card-body">
-                        <h3 class="ka-card-title">{{ vehicle.title }}</h3>
-                        <div class="brand-tag-with-logo">
-                            {% if vehicle.brand in CAR_BRAND_LOGOS %}
-                            <img src="{{ CAR_BRAND_LOGOS[vehicle.brand] }}" class="brand-tag-logo" alt="">
-                            {% endif %}
-                            <span class="brand-tag">{{ vehicle.brand }}</span>
-                        </div>
-                        <div class="ka-card-model">{{ vehicle.model }} - {{ vehicle.year }}</div>
-                        <div class="ka-card-price">{{ vehicle.price }} IQD</div>
-                        <div class="ka-card-actions">
-                            <a href="{{ url_for('vehicle_detail', vehicle_id=vehicle.id) }}" class="btn-ka-primary"><i class="fas fa-eye"></i> {{ t('detail') }}</a>
-                        </div>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
+                        <p class="card-text">
+                            <span class="badge bg-primary">ساڵ: {{ vehicle.year }}</span>
+                            <span class="badge bg-success">${{ vehicle.price }}</span>
+                            </p>
+                        <p class="card-text">{{ vehicle.description[:80] }}...</p>
+                        <a href="#" class="btn btn-outline-primary btn-sm">بینینی زیاتر</a>
                     </div>
                 </div>
             </div>
-            {% else %}
-            <div class="col-12 text-center py-5">
-                <p class="text-muted">{{ t('no_vehicles') }}</p>
+            {% endfor %}
+        </div>
+
+        <!-- بەشی پارچەکان -->
+        <h2 class="mb-3">🔧 پارچەکان</h2>
+        <div class="row">
+            {% for part in parts %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ part.name }}</h5>
+                        <p class="card-text">
+                            <span class="badge bg-success">${{ part.price }}</span>
+                        </p>
+                        <p class="card-text">{{ part.description[:80] }}...</p>
+                        <a href="#" class="btn btn-outline-primary btn-sm">بینینی زیاتر</a>
+                    </div>
+                </div>
             </div>
             {% endfor %}
-        {% endif %}
+        </div>
     </div>
 
-    <!-- Pagination -->
-    {% if pagination and pagination.pages > 1 %}
-    <div class="d-flex justify-content-center mt-5">
-        <ul class="pagination">
-            {% if pagination.has_prev %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('index', page=pagination.prev_num, q=search_query, city=city_filter, brand=brand_filter, type=list_type, min_price=min_price, max_price=max_price) }}">&laquo;</a></li>
-            {% endif %}
-            {% for p in pagination.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
-                {% if p %}
-                    <li class="page-item {% if p == pagination.page %}active{% endif %}"><a class="page-link" href="{{ url_for('index', page=p, q=search_query, city=city_filter, brand=brand_filter, type=list_type, min_price=min_price, max_price=max_price) }}">{{ p }}</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link">...</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if pagination.has_next %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('index', page=pagination.next_num, q=search_query, city=city_filter, brand=brand_filter, type=list_type, min_price=min_price, max_price=max_price) }}">&raquo;</a></li>
-            {% endif %}
-        </ul>
-    </div>
-    {% endif %}
-</div>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
