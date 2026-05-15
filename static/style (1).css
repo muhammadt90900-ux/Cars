@@ -1,0 +1,419 @@
+/* ===================================================================
+   KURD AUTO - PREMIUM DARK V4 (تەواو چاککراو و جوانتر)
+   ڕەنگی زێڕین + تاریکی شیک + ڕیسپۆنسیڤ
+   =================================================================== */
+
+:root {
+    --gold: #fbbf24;
+    --gold-dark: #d97706;
+    --gold-light: #fde68a;
+    --dark-bg: #0a0c10;
+    --dark-card: #11131a;
+    --dark-card2: #181c24;
+    --border-color: #1f2937;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-dim: #6b7280;
+    --red: #ef4444;
+    --green: #10b981;
+    --blue: #3b82f6;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-gold: 0 0 12px rgba(251, 191, 36, 0.3);
+    --transition: all 0.2s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--dark-bg);
+    color: var(--text-main);
+    font-family: 'Noto Kufi Arabic', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    direction: rtl;
+}
+
+/* ---------- ناوبار ---------- */
+.ka-navbar {
+    background: rgba(8, 12, 16, 0.95) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 0;
+}
+
+.ka-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.brand-icon {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 0 2px var(--gold));
+}
+
+.brand-text {
+    font-size: 1.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+}
+
+.nav-link {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    margin: 0 4px;
+}
+
+.nav-link:hover, .nav-link:focus {
+    color: var(--gold) !important;
+    background: rgba(251, 191, 36, 0.1);
+}
+
+.ka-add-btn {
+    background: linear-gradient(105deg, var(--gold), var(--gold-dark));
+    color: #000 !important;
+    font-weight: 800;
+    border-radius: 40px !important;
+    padding: 6px 20px;
+    transition: all 0.25s;
+}
+
+.ka-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+    background: var(--gold-light);
+}
+
+.ka-register-btn {
+    background: transparent;
+    border: 1.5px solid var(--gold);
+    color: var(--gold) !important;
+    border-radius: 40px;
+    padding: 6px 20px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.ka-register-btn:hover {
+    background: var(--gold);
+    color: #000 !important;
+    border-color: var(--gold);
+}
+
+/* سەرەتا */
+.ka-page-hero {
+    padding: 60px 0 40px;
+    text-align: center;
+}
+
+.ka-hero-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    background: linear-gradient(120deg, var(--gold), #fff, var(--gold-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 16px;
+}
+
+/* کارتەکان (پارچە و ئۆتۆمبێل) */
+.ka-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.ka-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold);
+    box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(251, 191, 36, 0.3);
+}
+
+.ka-card-img, .ka-card-video {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.ka-card-body {
+    padding: 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ka-card-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    margin: 0;
+    color: #fff;
+}
+
+.ka-card-model {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.ka-card-price {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin: 8px 0 4px;
+}
+
+.city-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
+    color: var(--gold);
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 30px;
+    border: 1px solid rgba(251, 191, 36, 0.5);
+}
+
+/* دوگمەکان */
+.btn-ka-primary {
+    background: linear-gradient(105deg, var(--gold), var(--gold-dark));
+    border: none;
+    color: #000;
+    font-weight: 800;
+    padding: 8px 20px;
+    border-radius: 40px;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-ka-primary:hover {
+    transform: scale(1.02);
+    background: var(--gold-light);
+    color: #000;
+    box-shadow: var(--shadow-gold);
+}
+
+.btn-ka-outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    border-radius: 40px;
+    padding: 7px 18px;
+    transition: 0.2s;
+}
+
+.btn-ka-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* دوگمەی واتساپ و تەلەفۆن */
+.btn-ka-whatsapp {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    border-radius: 40px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+.btn-ka-whatsapp:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.btn-ka-call {
+    background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+    color: white;
+    border-radius: 40px;
+    padding: 8px 16px;
+}
+
+/* فۆڕم و کارتەکانی فۆڕم */
+.ka-form-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 40px 30px;
+    max-width: 500px;
+    margin: 30px auto;
+}
+
+.ka-form-title {
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 20px;
+}
+
+.form-control, .form-select {
+    background: var(--dark-card2) !important;
+    border: 1px solid var(--border-color) !important;
+    color: white !important;
+    border-radius: var(--radius-md) !important;
+    padding: 12px 15px !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--gold) !important;
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2) !important;
+}
+
+/* پاگێنەیشن */
+.pagination .page-link {
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    border-radius: 10px;
+    margin: 0 4px;
+    transition: 0.2s;
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: black;
+    font-weight: 700;
+}
+
+/* داشبۆرد و ئامارەکان */
+.ka-stats-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.ka-stat-box {
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    flex: 1;
+    text-align: center;
+}
+
+.ka-stat-num {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+}
+
+/* لۆگۆکانی براندەکان */
+.brand-logos-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 16px 0;
+    scrollbar-width: thin;
+}
+
+.brand-logo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 12px 10px;
+    min-width: 80px;
+    transition: 0.2s;
+}
+
+.brand-logo-item.active, .brand-logo-item:hover {
+    border-color: var(--gold);
+    background: rgba(251, 191, 36, 0.08);
+    transform: translateY(-4px);
+}
+
+.brand-logo-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+}
+
+/* ڕیلەکان */
+.reels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+.reel-card {
+    background: #000;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: 0.2s;
+}
+
+.reel-video-wrap {
+    position: relative;
+    padding-top: 177%;
+    background: black;
+}
+
+.reel-video-wrap video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* فوتەر */
+.ka-footer {
+    background: var(--dark-card);
+    border-top: 1px solid var(--border-color);
+    padding: 30px 0;
+    margin-top: 60px;
+    text-align: center;
+}
+
+/* میدیا کوێری - مۆبایل */
+@media (max-width: 768px) {
+    .ka-hero-title {
+        font-size: 1.8rem;
+    }
+    .ka-search-wrap {
+        flex-direction: column;
+    }
+    .ka-card-actions {
+        flex-direction: column;
+    }
+    .btn-ka-primary, .btn-ka-outline, .btn-ka-whatsapp, .btn-ka-call {
+        width: 100%;
+        justify-content: center;
+    }
+    .ka-form-card {
+        padding: 25px 18px;
+    }
+}
