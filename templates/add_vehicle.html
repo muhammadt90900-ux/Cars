@@ -1,193 +1,69 @@
-{% extends "base.html" %}
-{% block content %}
-<div class="container py-4">
-    <div class="auth-card mx-auto" style="max-width:600px;">
-        <h2 class="mb-4" style="font-weight:800;">ئۆتۆمبێل زیاد بکە</h2>
-        <form method="POST" enctype="multipart/form-data" id="vehicleForm">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>زیادکردنی ئۆتۆمبێل - بازاڕی سەیارە</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
 
-            <div class="mb-3">
-                <label class="form-label ka-label">ناونیشان</label>
-                <input type="text" name="title" class="form-control ka-input" required placeholder="نموونە: Toyota Corolla 2020">
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-6">
-                    <label class="form-label ka-label">مارکە</label>
-                    <select name="brand" class="form-select ka-input" required>
-                        <option value="">مارکە هەڵبژێرە</option>
-                        {% for b in brands %}
-                        <option value="{{ b }}">{{ b }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="col-6">
-                    <label class="form-label ka-label">مۆدێل</label>
-                    <input type="text" name="model" class="form-control ka-input" placeholder="Corolla">
-                </div>
-            </div>
-
-            <div class="row g-3 mb-3">
-                <div class="col-6">
-                    <label class="form-label ka-label">ساڵ</label>
-                    <input type="number" name="year" class="form-control ka-input" value="2020">
-                </div>
-                <div class="col-6">
-                    <label class="form-label ka-label">نرخ ($)</label>
-                    <input type="number" name="price" class="form-control ka-input" required>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label ka-label">شار</label>
-                <select name="city" class="form-select ka-input">
-                    <option value="">شار هەڵبژێرە</option>
-                    {% for c in cities %}
-                    <option value="{{ c }}">{{ c }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label ka-label">وردەکاری</label>
-                <textarea name="description" class="form-control ka-input" rows="3"></textarea>
-            </div>
-
-            <!-- بەشی وێنەکان -->
-            <div class="mb-4 p-3" style="background: rgba(251,191,36,0.05); border: 1px dashed var(--gold); border-radius: 12px;">
-                <label class="form-label ka-label mb-3">
-                    <i class="fas fa-images me-2"></i>وێنەکان بارکە
-                    <small class="text-muted me-2">(زیاتر لە 8 وێنە نابێت، یەکەم وێنە دەبێتە سەرەکی)</small>
-                </label>
-
-                <!-- گرید 4x2 بۆ 8 وێنە -->
-                <div class="row g-2 mb-3" id="imageGrid">
-                    {% for i in range(8) %}
-                    <div class="col-3">
-                        <div class="image-slot" id="slot-{{ i }}" onclick="triggerUpload({{ i }})"
-                             style="aspect-ratio:1; border: 2px dashed #ccc; border-radius:10px; cursor:pointer;
-                                    display:flex; align-items:center; justify-content:center;
-                                    background:#f8f9fa; overflow:hidden; position:relative;">
-                            <div class="slot-placeholder" id="placeholder-{{ i }}">
-                                {% if i == 0 %}
-                                <div style="text-align:center;">
-                                    <i class="fas fa-camera" style="font-size:20px; color:var(--gold);"></i>
-                                    <div style="font-size:10px; color:#888; margin-top:4px;">سەرەکی</div>
-                                </div>
-                                {% else %}
-                                <i class="fas fa-plus" style="font-size:18px; color:#ccc;"></i>
-                                {% endif %}
-                            </div>
-                            <img id="preview-{{ i }}" src="" alt=""
-                                 style="display:none; width:100%; height:100%; object-fit:cover; border-radius:8px;">
-                            <button type="button" id="remove-{{ i }}"
-                                    onclick="removeImage(event, {{ i }})"
-                                    style="display:none; position:absolute; top:4px; right:4px;
-                                           background:rgba(255,0,0,0.8); color:white; border:none;
-                                           border-radius:50%; width:20px; height:20px; font-size:12px;
-                                           cursor:pointer; z-index:10;">×</button>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- input فایل مخفی -->
-                <input type="file" name="image_files" id="fileInput" accept="image/*" multiple
-                       style="display:none;" onchange="handleFiles(this.files)">
-
-                <small class="text-muted d-block text-center">
-                    <i class="fas fa-info-circle me-1"></i>
-                    کلیک بکە لەسەر هەر خانەیەک بۆ زیادکردنی وێنە
-                </small>
-            </div>
-
-            <button type="submit" class="btn-ka-primary w-100 justify-content-center" style="padding:13px;">
-                <i class="fas fa-plus me-2"></i>بڵاوکردنەوەی ئۆتۆمبێل
+    <!-- ناڤبار -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">🚗 بازاڕی سەیارە</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-        </form>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">سەرەکی</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/add_vehicle">زیادکردنی ئۆتۆمبێل</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/add_part">زیادکردنی پارچە</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- فۆڕم -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">زیادکردنی ئۆتۆمبێلی نوێ</h2>
+                        <form method="POST" action="/add_vehicle">
+                            <div class="mb-3">
+                                <label for="brand" class="form-label">مارک</label>
+                                <input type="text" class="form-control" id="brand" name="brand" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="model" class="form-label">مۆدێل</label>
+                                <input type="text" class="form-control" id="model" name="model" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="year" class="form-label">ساڵ</label>
+                                <input type="number" class="form-control" id="year" name="year" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">نرخ (دینار)</label>
+                                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">وەسف</label>
+                                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">زیادکردن</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 
-<style>
-.image-slot:hover {
-    border-color: var(--gold) !important;
-    background: rgba(251,191,36,0.05) !important;
-}
-#slot-0 {
-    border-color: var(--gold) !important;
-}
-</style>
-
-<script>
-let selectedFiles = [];
-let currentSlot = 0;
-
-function triggerUpload(slotIndex) {
-    currentSlot = slotIndex;
-    document.getElementById('fileInput').click();
-}
-
-function handleFiles(files) {
-    Array.from(files).forEach(file => {
-        if (selectedFiles.length >= 8) return;
-        
-        // بدۆزە خانەی خاوێن
-        let emptySlot = -1;
-        for (let i = 0; i < 8; i++) {
-            if (!selectedFiles[i]) {
-                emptySlot = i;
-                break;
-            }
-        }
-        if (emptySlot === -1) return;
-        
-        selectedFiles[emptySlot] = file;
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('preview-' + emptySlot).src = e.target.result;
-            document.getElementById('preview-' + emptySlot).style.display = 'block';
-            document.getElementById('placeholder-' + emptySlot).style.display = 'none';
-            document.getElementById('remove-' + emptySlot).style.display = 'block';
-            document.getElementById('slot-' + emptySlot).style.borderStyle = 'solid';
-            document.getElementById('slot-' + emptySlot).style.borderColor = 'var(--gold)';
-        };
-        reader.readAsDataURL(file);
-    });
-    
-    updateFileInput();
-}
-
-function removeImage(event, slotIndex) {
-    event.stopPropagation();
-    selectedFiles[slotIndex] = null;
-    document.getElementById('preview-' + slotIndex).style.display = 'none';
-    document.getElementById('preview-' + slotIndex).src = '';
-    document.getElementById('placeholder-' + slotIndex).style.display = 'flex';
-    document.getElementById('remove-' + slotIndex).style.display = 'none';
-    document.getElementById('slot-' + slotIndex).style.borderStyle = 'dashed';
-    if (slotIndex !== 0) {
-        document.getElementById('slot-' + slotIndex).style.borderColor = '#ccc';
-    }
-    updateFileInput();
-}
-
-function updateFileInput() {
-    const dt = new DataTransfer();
-    selectedFiles.forEach(file => {
-        if (file) dt.items.add(file);
-    });
-    document.getElementById('fileInput').files = dt.files;
-}
-
-// چێکردنی فۆرم بەپێی ئەوەی وێنەی هەیە
-document.getElementById('vehicleForm').addEventListener('submit', function(e) {
-    const hasImage = selectedFiles.some(f => f !== null && f !== undefined);
-    if (!hasImage) {
-        e.preventDefault();
-        alert('تکایە لانیکەم یەک وێنە هەڵبژێرە');
-    }
-});
-</script>
-
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
