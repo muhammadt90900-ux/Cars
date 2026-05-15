@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-from models import db, User, Part, Vehicle, Reel, ReelLike, SiteSettings, IRAQ_CITIES, CAR_BRANDS, CAR_BRAND_LOGOS, FUEL_TYPES, TRANSMISSION_TYPES, VehicleImage, PartImage
+from models import db, User, Part, Vehicle, Reel, ReelLike, SiteSettings, IRAQ_CITIES, CAR_BRANDS, FUEL_TYPES, TRANSMISSION_TYPES, VehicleImage, PartImage
 from flask_wtf.csrf import CSRFProtect
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
