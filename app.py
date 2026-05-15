@@ -17,6 +17,7 @@ from flask_limiter.util import get_remote_address
 import magic as magic_module
 from flask_talisman import Talisman
 from PIL import Image
+from flask import request, render_template
 
 # ئەم فەنکشنە لێرە زیاد بکە بۆ بچووککردنەوەی وێنە
 def save_optimized_image(file, folder):
@@ -947,7 +948,50 @@ def not_found(e):
 @app.errorhandler(500)
 def server_error(e):
     return render_template('500.html'), 500
+@app.route('/search')
+def search():
+    query = request.args.get('q', '')
+    category = request.args.get('category', 'all')
+    min_price = request.args.get('min_price')
+    max_price = request.args.get('max_price')
 
+    vehicles = []
+    parts = []
+
+    # گەڕان بۆ ئۆتۆمبێل
+    if category in ('all', 'vehicle'):
+        vehicle_query = Vehicle.query
+        if query:
+            vehicle_query = vehicle_query.filter(
+                (Vehicle.brand.ilike(f'%{query}%')) |
+                (Vehicle.model.ilike(f'%{query}%')) |
+                (Vehicle.description.ilike(f'%{query}%'))
+            )
+        if min_price:
+            vehicle_query = vehicle_query.filter(Vehicle.price >= float(min_price))
+        if max_price:
+            vehicle_query = vehicle_query.filter(Vehicle.price <= float(max_price))
+        vehicles = vehicle_query.all()
+
+    # گەڕان بۆ پارچە
+    if category in ('all', 'part'):
+        part_query = Part.query
+        if query:
+            part_query = part_query.filter(
+                (Part.name.ilike(f'%{query}%')) |
+                (Part.description.ilike(f'%{query}%'))
+            )
+        if min_price:
+            part_query = part_query.filter(Part.price >= float(min_price))
+        if max_price:
+            part_query = part_query.filter(Part.price <= float(max_price))
+        parts = part_query.all()
+
+    return render_template('search_results.html',
+                           vehicles=vehicles,
+                           parts=parts,
+                           query=query,
+                           category=category)
 # ══════════════════════════════════
 # MAIN
 # ══════════════════════════════════
