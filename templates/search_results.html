@@ -1,76 +1,41 @@
-<!DOCTYPE html>
-<html lang="ku" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ئەنجامی گەڕان - بازاڕی سەیارە</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .card { transition: transform 0.2s; }
-        .card:hover { transform: scale(1.02); }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}ئەنجامی گەڕان{% endblock %}
+{% block content %}
+<h2>ئەنجامی گەڕان بۆ "{{ query }}"</h2>
+<p class="text-muted">کاتێگۆری: {{ category }}</p>
+<a href="/" class="btn btn-outline-secondary mb-3">گەڕانەوە</a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">🚗 بازاڕی سەیارە</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/">سەرەکی</a></li>
-                </ul>
+<h3>🚘 ئۆتۆمبێلەکان</h3>
+<div class="row">
+    {% if vehicles %}
+        {% for vehicle in vehicles %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>{{ vehicle.brand }} {{ vehicle.model }}</h5>
+                    <p><span class="badge bg-primary">{{ vehicle.year }}</span> <span class="badge bg-success">${{ vehicle.price }}</span></p>
+                    <p>{{ vehicle.description[:80] }}...</p>
+                </div>
             </div>
         </div>
-    </nav>
+        {% endfor %}
+    {% else %}<p>نەدۆزرایەوە</p>{% endif %}
+</div>
 
-    <div class="container mt-4">
-        <h2>ئەنجامی گەڕان بۆ "{{ query }}"</h2>
-        <p class="text-muted">کاتێگۆری: {{ category }}</p>
-        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary mb-3">گەڕانەوە بۆ سەرەکی</a>
-
-        <!-- ئۆتۆمبێلەکان -->
-        <h3>🚘 ئۆتۆمبێلەکان</h3>
-        <div class="row">
-            {% if vehicles %}
-                {% for vehicle in vehicles %}
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ vehicle.brand }} {{ vehicle.model }}</h5>
-                            <p><span class="badge bg-primary">ساڵ: {{ vehicle.year }}</span>
-                               <span class="badge bg-success">${{ vehicle.price }}</span></p>
-                            <p>{{ vehicle.description[:80] }}...</p>
-                        </div>
-                    </div>
+<h3>🔧 پارچەکان</h3>
+<div class="row">
+    {% if parts %}
+        {% for part in parts %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5>{{ part.name }}</h5>
+                    <p><span class="badge bg-success">${{ part.price }}</span></p>
+                    <p>{{ part.description[:80] }}...</p>
                 </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-muted">هیچ ئۆتۆمبێلێک نەدۆزرایەوە.</p>
-            {% endif %}
+            </div>
         </div>
-
-        <!-- پارچەکان -->
-        <h3>🔧 پارچەکان</h3>
-        <div class="row">
-            {% if parts %}
-                {% for part in parts %}
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ part.name }}</h5>
-                            <p><span class="badge bg-success">${{ part.price }}</span></p>
-                            <p>{{ part.description[:80] }}...</p>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-muted">هیچ پارچەیەک نەدۆزرایەوە.</p>
-            {% endif %}
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        {% endfor %}
+    {% else %}<p>نەدۆزرایەوە</p>{% endif %}
+</div>
+{% endblock %}
